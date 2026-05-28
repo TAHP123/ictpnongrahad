@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTF :: Crypto Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0c0f;--bg2:#0f1318;--bg3:#141920;--green:#00ff88;--green-dim:rgba(0,255,136,0.08);--green-border:rgba(0,255,136,0.25);--amber:#ffb830;--red:#ff4466;--cyan:#00e5ff;--text:#c8d8c8;--text-dim:#4a6a5a;--mono:'Share Tech Mono',monospace;--sans:'Rajdhani',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:1000}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.5rem 4rem;position:relative;z-index:1}
+header{text-align:center;padding:2.5rem 0 2rem;border-bottom:1px solid var(--green-border);margin-bottom:2rem;position:relative}
+header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:160px;height:1px;background:var(--green);box-shadow:0 0 20px var(--green)}
+.logo{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:6px;color:var(--green);opacity:.7;margin-bottom:.6rem}
+h1{font-family:var(--sans);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:#fff;letter-spacing:2px;line-height:1;margin-bottom:.4rem}
+h1 span{color:var(--green)}
+.hsub{font-size:12px;color:var(--text-dim);letter-spacing:2px}
+.scorebar{display:flex;align-items:center;gap:1.5rem;background:var(--bg3);border:1px solid var(--green-border);border-radius:4px;padding:.7rem 1.25rem;margin-bottom:2rem;flex-wrap:wrap}
+.slabel{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+.sval{font-size:22px;color:var(--green);font-family:var(--sans);font-weight:700}
+.ptrack{flex:1;min-width:100px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.pfill{height:100%;background:var(--green);box-shadow:0 0 6px var(--green);width:0%;transition:width .5s ease}
+.card{background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:6px;margin-bottom:1.5rem;overflow:hidden;transition:border-color .3s;animation:fadeUp .4s ease both}
+.card:nth-child(1){animation-delay:.1s}.card:nth-child(2){animation-delay:.2s}.card:nth-child(3){animation-delay:.3s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card.solved{border-color:var(--green-border);box-shadow:0 0 20px rgba(0,255,136,0.04)}
+.card-head{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05)}
+.cnum{width:34px;height:34px;border:1px solid var(--green-border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:17px;font-weight:700;color:var(--green);flex-shrink:0}
+.cmeta{flex:1}
+.ctitle{font-family:var(--sans);font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px}
+.tags{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.tag{font-size:10px;padding:2px 8px;border-radius:2px;letter-spacing:1px;text-transform:uppercase}
+.t-c{background:rgba(0,229,255,0.08);color:var(--cyan);border:1px solid rgba(0,229,255,0.18)}
+.t-p{background:rgba(255,184,48,0.08);color:var(--amber);border:1px solid rgba(255,184,48,0.18)}
+.t-ok{background:rgba(0,255,136,0.08);color:var(--green);border:1px solid rgba(0,255,136,0.25)}
+.cbody{padding:1.25rem}
+.clabel{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:.35rem}
+.cbox{background:var(--bg);border:1px solid rgba(255,255,255,0.07);border-left:3px solid var(--green);border-radius:4px;padding:.75rem 1rem;font-size:13px;color:var(--green);word-break:break-all;line-height:1.7;margin-bottom:1rem}
+.code-wrap{background:var(--bg);border:1px solid rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:1rem}
+.code-bar{display:flex;align-items:center;gap:5px;padding:.45rem .75rem;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.05)}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.fname{color:var(--cyan);font-size:11px;margin-left:auto}
+.code-view{padding:.75rem 1rem;font-size:12px;line-height:1.9;overflow-x:auto;max-height:260px;overflow-y:auto}
+.code-view::-webkit-scrollbar{width:3px;height:3px}
+.code-view::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.ln{color:var(--text-dim);width:26px;display:inline-block;text-align:right;margin-right:10px;user-select:none}
+.kw{color:#c792ea}.fn{color:var(--cyan)}.st{color:var(--amber)}.cm{color:var(--text-dim);font-style:italic}.nm{color:#f78c6c}
+.hint-btn{background:none;border:1px solid rgba(255,255,255,0.1);color:var(--amber);font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;margin-bottom:.75rem}
+.hint-btn:hover{background:rgba(255,184,48,0.08);border-color:rgba(255,184,48,0.3)}
+.hbox{display:none;background:rgba(255,184,48,0.04);border:1px solid rgba(255,184,48,0.18);border-radius:4px;padding:.55rem .9rem;font-size:12px;color:var(--amber);line-height:1.65;margin-bottom:.75rem}
+.hbox.show{display:block}
+.ilabel{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:.35rem}
+.irow{display:flex;gap:8px}
+.fi{flex:1;background:var(--bg);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:.55rem .9rem;font-family:var(--mono);font-size:13px;color:#fff;outline:none;transition:border-color .2s}
+.fi:focus{border-color:var(--green)}
+.fi::placeholder{color:var(--text-dim)}
+.sb{background:transparent;border:1px solid var(--green-border);color:var(--green);font-family:var(--mono);font-size:12px;padding:.55rem 1.1rem;border-radius:4px;cursor:pointer;letter-spacing:1px;transition:all .2s;white-space:nowrap}
+.sb:hover{background:var(--green-dim);border-color:var(--green)}
+.sb:active{transform:scale(0.97)}
+.sb:disabled{opacity:.4;cursor:not-allowed}
+.rm{margin-top:.5rem;font-size:12px;min-height:16px}
+.ok{color:var(--green)}.fail{color:var(--red)}.warn{color:var(--amber)}
+.sban{display:none;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.25);border-radius:4px;padding:.5rem 1rem;font-size:12px;color:var(--green);margin-top:.75rem;text-align:center;letter-spacing:1px}
+.sban.show{display:block}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.shake{animation:shake .3s ease}
+.final{display:none;text-align:center;padding:2.5rem 1.5rem;border:1px solid var(--green-border);border-radius:6px;margin-top:2rem;background:var(--bg2);animation:fadeUp .5s ease}
+.final.show{display:block}
+.ft{font-family:var(--sans);font-size:2.2rem;font-weight:700;color:var(--green);letter-spacing:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo">&gt;_ CTF TERMINAL // CRYPTO TRACK</div>
+  <h1><span>CRYPTO</span> VAULT</h1>
+  <p class="hsub">3 CHALLENGES &mdash; MEDIUM &mdash; 300 PTS</p>
+</header>
+
+<div class="scorebar">
+  <div><div class="slabel">SCORE</div><div class="sval" id="sc">0</div></div>
+  <div><div class="slabel">SOLVED</div><div class="sval"><span id="sn">0</span>/3</div></div>
+  <div style="flex:1;min-width:100px"><div class="slabel" style="margin-bottom:6px">PROGRESS</div><div class="ptrack"><div class="pfill" id="pf"></div></div></div>
+</div>
+
+<!-- CH1 -->
+<div class="card" id="c1">
+  <div class="card-head">
+    <div class="cnum">01</div>
+    <div class="cmeta">
+      <div class="ctitle">Caesar's Shift</div>
+      <div class="tags">
+        <span class="tag t-c">Caesar Cipher</span>
+        <span class="tag t-p">100 pts</span>
+        <span class="tag t-ok" id="ok1" style="display:none">&#10003; SOLVED</span>
+      </div>
+    </div>
+  </div>
+  <div class="cbody">
+    <div class="clabel">CIPHERTEXT</div>
+    <div class="cbox">WKH VHFUHW LV KLGGHQ LQ WKH YDXOW. IODJ: lfws{vkliw_wkuhh_lv_wkh_nhb}</div>
+    <button class="hint-btn" onclick="th('h1')">[ HINT ]</button>
+    <div class="hbox" id="h1">ROT3</div>
+    <div class="ilabel">SUBMIT FLAG</div>
+    <div class="irow">
+      <input class="fi" id="a1" placeholder="ictp{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')sub(1)">
+      <button class="sb" id="btn1" onclick="sub(1)">SUBMIT</button>
+    </div>
+    <div class="rm" id="m1"></div>
+    <div class="sban" id="sb1">&#10003; FLAG ACCEPTED &mdash; +100 POINTS</div>
+  </div>
+</div>
+
+<!-- CH2 -->
+<div class="card" id="c2">
+  <div class="card-head">
+    <div class="cnum">02</div>
+    <div class="cmeta">
+      <div class="ctitle">Hidden in the Source</div>
+      <div class="tags">
+        <span class="tag t-c">JS Recon</span>
+        <span class="tag t-p">100 pts</span>
+        <span class="tag t-ok" id="ok2" style="display:none">&#10003; SOLVED</span>
+      </div>
+    </div>
+  </div>
+  <div class="cbody">
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
+        <span class="fname">auth.js</span>
+      </div>
+      <div class="code-view"><span class="ln">1</span><span class="cm">// internal auth util — do not expose</span>
+<span class="ln">2</span><span class="kw">const</span> _0x3f2a = [<span class="nm">102</span>,<span class="nm">88</span>,<span class="nm">78</span>,<span class="nm">108</span>,<span class="nm">97</span>,<span class="nm">87</span>,<span class="nm">120</span>,<span class="nm">102</span>,<span class="nm">99</span>,<span class="nm">109</span>,<span class="nm">86</span>,<span class="nm">50</span>,<span class="nm">90</span>,<span class="nm">87</span>,<span class="nm">53</span>,<span class="nm">102</span>,<span class="nm">90</span>,<span class="nm">87</span>,<span class="nm">81</span>,<span class="nm">119</span>,<span class="nm">89</span>,<span class="nm">49</span>,<span class="nm">57</span>,<span class="nm">108</span>,<span class="nm">89</span>,<span class="nm">51</span>,<span class="nm">74</span>,<span class="nm">49</span>,<span class="nm">77</span>,<span class="nm">72</span>,<span class="nm">78</span>,<span class="nm">55</span>,<span class="nm">99</span>,<span class="nm">72</span>,<span class="nm">82</span>,<span class="nm">106</span>,<span class="nm">97</span>,<span class="nm">81</span>,<span class="nm">61</span>,<span class="nm">61</span>];
+<span class="ln">3</span>
+<span class="ln">4</span><span class="kw">function</span> <span class="fn">_decode</span>(arr) {
+<span class="ln">5</span>  <span class="kw">return</span> arr.<span class="fn">map</span>(c => String.<span class="fn">fromCharCode</span>(c)).<span class="fn">join</span>(<span class="st">''</span>);
+<span class="ln">6</span>}
+<span class="ln">7</span>
+<span class="ln">8</span><span class="kw">function</span> <span class="fn">_extract</span>(s) {
+<span class="ln">9</span>  <span class="kw">return</span> <span class="fn">atob</span>(s).<span class="fn">split</span>(<span class="st">''</span>).<span class="fn">reverse</span>().<span class="fn">join</span>(<span class="st">''</span>);
+<span class="ln">10</span>}
+<span class="ln">11</span>
+<span class="ln">12</span><span class="cm">// session token seed</span>
+<span class="ln">13</span><span class="kw">const</span> _seed = <span class="fn">_extract</span>(<span class="fn">_decode</span>(_0x3f2a));
+<span class="ln">14</span>
+<span class="ln">15</span><span class="kw">function</span> <span class="fn">verifyToken</span>(tok) {
+<span class="ln">16</span>  <span class="kw">return</span> tok === _seed;
+<span class="ln">17</span>}
+      </div>
+    </div>
+    <button class="hint-btn" onclick="th('h2')">[ HINT ]</button>
+    <div class="hbox" id="h2">trace: _0x3f2a &rarr; _decode() &rarr; _extract() &rarr; _seed</div>
+    <div class="ilabel">SUBMIT FLAG</div>
+    <div class="irow">
+      <input class="fi" id="a2" placeholder="ictp{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')sub(2)">
+      <button class="sb" id="btn2" onclick="sub(2)">SUBMIT</button>
+    </div>
+    <div class="rm" id="m2"></div>
+    <div class="sban" id="sb2">&#10003; FLAG ACCEPTED &mdash; +100 POINTS</div>
+  </div>
+</div>
+
+<!-- CH3 -->
+<div class="card" id="c3">
+  <div class="card-head">
+    <div class="cnum">03</div>
+    <div class="cmeta">
+      <div class="ctitle">ASCII &amp; Base64 Stack</div>
+      <div class="tags">
+        <span class="tag t-c">Encoding</span>
+        <span class="tag t-p">100 pts</span>
+        <span class="tag t-ok" id="ok3" style="display:none">&#10003; SOLVED</span>
+      </div>
+    </div>
+  </div>
+  <div class="cbody">
+    <div class="clabel">CIPHERTEXT</div>
+    <div class="cbox">97 87 78 48 99 72 116 104 99 50 78 112 97 86 57 48 97 71 86 117 88 50 74 104 99 50 85 50 78 70 57 106 97 71 70 112 98 110 48 61</div>
+    <button class="hint-btn" onclick="th('h3')">[ HINT ]</button>
+    <div class="hbox" id="h3">decimal &rarr; chr() &rarr; base64 &rarr; decode</div>
+    <div class="ilabel">SUBMIT FLAG</div>
+    <div class="irow">
+      <input class="fi" id="a3" placeholder="ictp{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')sub(3)">
+      <button class="sb" id="btn3" onclick="sub(3)">SUBMIT</button>
+    </div>
+    <div class="rm" id="m3"></div>
+    <div class="sban" id="sb3">&#10003; FLAG ACCEPTED &mdash; +100 POINTS</div>
+  </div>
+</div>
+
+<div class="final" id="fin">
+  <div class="ft" id="secret-text"></div>
+</div>
+
+</div>
+<script>
+const BASE_URL = 'https://ictpnongrahad.vercel.app';
+
+let score = 0, solved = new Set();
+const userFlags = {}; // เก็บ flag ที่ user กรอกถูกแต่ละข้อ
+
+async function sub(n) {
+  if (solved.has(n)) return;
+  const val = document.getElementById('a' + n).value.trim();
+  const m = document.getElementById('m' + n);
+  const btn = document.getElementById('btn' + n);
+
+  if (!val) return;
+  btn.disabled = true;
+  m.className = 'rm warn';
+  m.textContent = 'checking...';
+
+  try {
+    const res = await fetch(BASE_URL + '/api/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge: n, answer: val })
+    });
+    const data = await res.json();
+
+    if (res.status === 429) {
+      m.className = 'rm warn';
+      m.textContent = '⚠ ' + data.msg;
+      btn.disabled = false;
+      return;
+    }
+
+    if (data.ok) {
+      m.className = 'rm ok';
+      m.textContent = '✓ CORRECT — flag accepted';
+      solved.add(n);
+      userFlags[n] = val; // เก็บ flag ที่กรอกถูก
+      score += 100;
+      document.getElementById('sc').textContent = score;
+      document.getElementById('sn').textContent = solved.size;
+      document.getElementById('pf').style.width = (solved.size / 3 * 100) + '%';
+      document.getElementById('ok' + n).style.display = 'inline';
+      document.getElementById('sb' + n).classList.add('show');
+      document.getElementById('c' + n).classList.add('solved');
+      if (solved.size === 3) setTimeout(complete, 600);
+    } else {
+      m.className = 'rm fail';
+      m.textContent = '✗ WRONG FLAG — try again';
+      const r = document.getElementById('a' + n).parentElement;
+      r.classList.remove('shake'); void r.offsetWidth; r.classList.add('shake');
+      btn.disabled = false;
+    }
+  } catch (e) {
+    m.className = 'rm warn';
+    m.textContent = '⚠ Cannot reach server — check BASE_URL';
+    btn.disabled = false;
+  }
+}
+
+async function complete() {
+  try {
+    const res = await fetch(BASE_URL + '/api/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        keys: {
+          1: userFlags[1],
+          2: userFlags[2],
+          3: userFlags[3]
+        }
+      })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('secret-text').textContent = data.secret;
+      document.getElementById('fin').classList.add('show');
+    }
+  } catch (e) {
+    document.getElementById('secret-text').textContent = '⚠ server offline';
+    document.getElementById('fin').classList.add('show');
+  }
+}
+
+function th(id) { document.getElementById(id).classList.toggle('show'); }
+</script>
+</body>
+</html>
