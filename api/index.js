@@ -11,7 +11,7 @@ const FLAGS = {
   2: "ictp{s0urce_c0de_never_lies}",
   3: "ictp{ascii_then_base64_chain}",
 };
-const SECRET_PASS = "Secretpassword";
+const SECRET_PASS = "Are you Robot?";
 
 const attempts = new Map();
 function rateLimit(ip) {
