@@ -1,9 +1,11 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/index.js", "use": "@vercel/node" }
+    { "src": "api/index.js", "use": "@vercel/node" },
+    { "src": "ctf_challenge.html", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "api/index.js" }
+    { "src": "/api/(.*)", "dest": "api/index.js" },
+    { "src": "/", "dest": "ctf_challenge.html" }
   ]
 }
