@@ -18,11 +18,6 @@ header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:transl
 h1{font-family:var(--sans);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:#fff;letter-spacing:2px;line-height:1;margin-bottom:.4rem}
 h1 span{color:var(--green)}
 .hsub{font-size:12px;color:var(--text-dim);letter-spacing:2px}
-.scorebar{display:flex;align-items:center;gap:1.5rem;background:var(--bg3);border:1px solid var(--green-border);border-radius:4px;padding:.7rem 1.25rem;margin-bottom:2rem;flex-wrap:wrap}
-.slabel{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
-.sval{font-size:22px;color:var(--green);font-family:var(--sans);font-weight:700}
-.ptrack{flex:1;min-width:100px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
-.pfill{height:100%;background:var(--green);box-shadow:0 0 6px var(--green);width:0%;transition:width .5s ease}
 .card{background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:6px;margin-bottom:1.5rem;overflow:hidden;transition:border-color .3s;animation:fadeUp .4s ease both}
 .card:nth-child(1){animation-delay:.1s}.card:nth-child(2){animation-delay:.2s}.card:nth-child(3){animation-delay:.3s}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -31,11 +26,6 @@ h1 span{color:var(--green)}
 .cnum{width:34px;height:34px;border:1px solid var(--green-border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:17px;font-weight:700;color:var(--green);flex-shrink:0}
 .cmeta{flex:1}
 .ctitle{font-family:var(--sans);font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px}
-.tags{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
-.tag{font-size:10px;padding:2px 8px;border-radius:2px;letter-spacing:1px;text-transform:uppercase}
-.t-c{background:rgba(0,229,255,0.08);color:var(--cyan);border:1px solid rgba(0,229,255,0.18)}
-.t-p{background:rgba(255,184,48,0.08);color:var(--amber);border:1px solid rgba(255,184,48,0.18)}
-.t-ok{background:rgba(0,255,136,0.08);color:var(--green);border:1px solid rgba(0,255,136,0.25)}
 .cbody{padding:1.25rem}
 .clabel{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:.35rem}
 .cbox{background:var(--bg);border:1px solid rgba(255,255,255,0.07);border-left:3px solid var(--green);border-radius:4px;padding:.75rem 1rem;font-size:13px;color:var(--green);word-break:break-all;line-height:1.7;margin-bottom:1rem}
@@ -49,10 +39,6 @@ h1 span{color:var(--green)}
 .code-view::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
 .ln{color:var(--text-dim);width:26px;display:inline-block;text-align:right;margin-right:10px;user-select:none}
 .kw{color:#c792ea}.fn{color:var(--cyan)}.st{color:var(--amber)}.cm{color:var(--text-dim);font-style:italic}.nm{color:#f78c6c}
-.hint-btn{background:none;border:1px solid rgba(255,255,255,0.1);color:var(--amber);font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;margin-bottom:.75rem}
-.hint-btn:hover{background:rgba(255,184,48,0.08);border-color:rgba(255,184,48,0.3)}
-.hbox{display:none;background:rgba(255,184,48,0.04);border:1px solid rgba(255,184,48,0.18);border-radius:4px;padding:.55rem .9rem;font-size:12px;color:var(--amber);line-height:1.65;margin-bottom:.75rem}
-.hbox.show{display:block}
 .ilabel{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:.35rem}
 .irow{display:flex;gap:8px}
 .fi{flex:1;background:var(--bg);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:.55rem .9rem;font-family:var(--mono);font-size:13px;color:#fff;outline:none;transition:border-color .2s}
@@ -82,11 +68,6 @@ h1 span{color:var(--green)}
   <p class="hsub">3 CHALLENGES &mdash; MEDIUM &mdash; 300 PTS</p>
 </header>
 
-<div class="scorebar">
-  <div><div class="slabel">SCORE</div><div class="sval" id="sc">0</div></div>
-  <div><div class="slabel">SOLVED</div><div class="sval"><span id="sn">0</span>/3</div></div>
-  <div style="flex:1;min-width:100px"><div class="slabel" style="margin-bottom:6px">PROGRESS</div><div class="ptrack"><div class="pfill" id="pf"></div></div></div>
-</div>
 
 <!-- CH1 -->
 <div class="card" id="c1">
@@ -94,18 +75,11 @@ h1 span{color:var(--green)}
     <div class="cnum">01</div>
     <div class="cmeta">
       <div class="ctitle">Caesar's Shift</div>
-      <div class="tags">
-        <span class="tag t-c">Caesar Cipher</span>
-        <span class="tag t-p">100 pts</span>
-        <span class="tag t-ok" id="ok1" style="display:none">&#10003; SOLVED</span>
-      </div>
     </div>
   </div>
   <div class="cbody">
     <div class="clabel">CIPHERTEXT</div>
     <div class="cbox">WKH VHFUHW LV KLGGHQ LQ WKH YDXOW. IODJ: lfws{vkliw_wkuhh_lv_wkh_nhb}</div>
-    <button class="hint-btn" onclick="th('h1')">[ HINT ]</button>
-    <div class="hbox" id="h1">ROT3</div>
     <div class="ilabel">SUBMIT FLAG</div>
     <div class="irow">
       <input class="fi" id="a1" placeholder="ictp{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')sub(1)">
@@ -122,11 +96,6 @@ h1 span{color:var(--green)}
     <div class="cnum">02</div>
     <div class="cmeta">
       <div class="ctitle">Hidden in the Source</div>
-      <div class="tags">
-        <span class="tag t-c">JS Recon</span>
-        <span class="tag t-p">100 pts</span>
-        <span class="tag t-ok" id="ok2" style="display:none">&#10003; SOLVED</span>
-      </div>
     </div>
   </div>
   <div class="cbody">
@@ -154,8 +123,6 @@ h1 span{color:var(--green)}
 <span class="ln">17</span>}
       </div>
     </div>
-    <button class="hint-btn" onclick="th('h2')">[ HINT ]</button>
-    <div class="hbox" id="h2">trace: _0x3f2a &rarr; _decode() &rarr; _extract() &rarr; _seed</div>
     <div class="ilabel">SUBMIT FLAG</div>
     <div class="irow">
       <input class="fi" id="a2" placeholder="ictp{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')sub(2)">
@@ -172,18 +139,11 @@ h1 span{color:var(--green)}
     <div class="cnum">03</div>
     <div class="cmeta">
       <div class="ctitle">ASCII &amp; Base64 Stack</div>
-      <div class="tags">
-        <span class="tag t-c">Encoding</span>
-        <span class="tag t-p">100 pts</span>
-        <span class="tag t-ok" id="ok3" style="display:none">&#10003; SOLVED</span>
-      </div>
     </div>
   </div>
   <div class="cbody">
     <div class="clabel">CIPHERTEXT</div>
     <div class="cbox">97 87 78 48 99 72 116 104 99 50 78 112 97 86 57 48 97 71 86 117 88 50 74 104 99 50 85 50 78 70 57 106 97 71 70 112 98 110 48 61</div>
-    <button class="hint-btn" onclick="th('h3')">[ HINT ]</button>
-    <div class="hbox" id="h3">decimal &rarr; chr() &rarr; base64 &rarr; decode</div>
     <div class="ilabel">SUBMIT FLAG</div>
     <div class="irow">
       <input class="fi" id="a3" placeholder="ictp{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')sub(3)">
@@ -202,8 +162,8 @@ h1 span{color:var(--green)}
 <script>
 const BASE_URL = 'https://ictpnongrahad.vercel.app';
 
-let score = 0, solved = new Set();
-const userFlags = {}; // เก็บ flag ที่ user กรอกถูกแต่ละข้อ
+let solved = new Set();
+const userFlags = {};
 
 async function sub(n) {
   if (solved.has(n)) return;
@@ -235,12 +195,7 @@ async function sub(n) {
       m.className = 'rm ok';
       m.textContent = '✓ CORRECT — flag accepted';
       solved.add(n);
-      userFlags[n] = val; // เก็บ flag ที่กรอกถูก
-      score += 100;
-      document.getElementById('sc').textContent = score;
-      document.getElementById('sn').textContent = solved.size;
-      document.getElementById('pf').style.width = (solved.size / 3 * 100) + '%';
-      document.getElementById('ok' + n).style.display = 'inline';
+      userFlags[n] = val;
       document.getElementById('sb' + n).classList.add('show');
       document.getElementById('c' + n).classList.add('solved');
       if (solved.size === 3) setTimeout(complete, 600);
@@ -281,8 +236,6 @@ async function complete() {
     document.getElementById('fin').classList.add('show');
   }
 }
-
-function th(id) { document.getElementById(id).classList.toggle('show'); }
 </script>
 </body>
 </html>
